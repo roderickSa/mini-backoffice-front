@@ -6,7 +6,7 @@ import { ErrorResponse } from "../_types";
 
 const initialState: ErrorResponse = {
   data: {
-    errors: [""],
+    errors: [{ message: "" }],
   },
 };
 
@@ -40,7 +40,7 @@ export default function LoginPage() {
                 state?.data?.errors ? "" : "hidden"
               }`}
             >
-              {state?.data?.errors[0]}
+              {state?.data?.errors[0].message}
             </p>
             <div className="flex gap-3 pt-3 items-center justify-center">
               <SubmitButton />

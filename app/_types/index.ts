@@ -1,19 +1,40 @@
 interface HttpErrorResponse {
   response: {
     data: ErrorResponse;
+    status: number;
   };
 }
 
 interface ErrorResponse {
   data: {
-    errors: string[];
+    errors: ErrorMessageType[];
   };
 }
+
+type ErrorMessageType = {
+  message: string;
+};
 
 interface HttpLoginResponse {
   user: UserType;
   token: TokenType;
 }
+
+interface HttpDataCategoryResponse {
+  data: CategoryType[];
+}
+
+type CategoryType = {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+type FrontCategoryDataType = {
+  error: { status: number; message: string };
+  data: CategoryType[];
+};
 
 type UserType = {
   name: string;
@@ -34,4 +55,11 @@ enum UserRole {
   USER,
 }
 
-export type { HttpLoginResponse, ErrorResponse, HttpErrorResponse };
+export type {
+  HttpLoginResponse,
+  HttpDataCategoryResponse,
+  CategoryType,
+  FrontCategoryDataType,
+  ErrorResponse,
+  HttpErrorResponse,
+};

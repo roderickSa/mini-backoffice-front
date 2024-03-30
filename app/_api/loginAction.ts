@@ -24,6 +24,6 @@ export default async function loginAction(prevState: any, formData: FormData) {
     return (error as HttpErrorResponse)?.response.data;
   }
 
-  revalidatePath("/");
-  redirect(`/`);
+  revalidatePath("/dashboard");
+  redirect(`/dashboard`);
 }
