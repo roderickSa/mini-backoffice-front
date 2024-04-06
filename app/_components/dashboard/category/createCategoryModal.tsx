@@ -1,10 +1,12 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import useDashboard from "../useDashboard";
 import useCategory from "./useCategory";
 import { useCategoryStore } from "@/app/_store/zustand";
 import { axioxFrontClient } from "@/app/_utils/axiosClient";
 import { HttpErrorResponse, HttpItemCategoryResponse } from "@/app/_types";
 
 function CreateCategoryModal() {
+  const { token } = useDashboard();
   const { addCategory } = useCategoryStore();
   const [categoryName, setCategoryName] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -19,10 +21,9 @@ function CreateCategoryModal() {
       name: categoryName,
     };
     try {
-      const response = await axioxFrontClient.post<HttpItemCategoryResponse>(
-        "/category",
-        payload
-      );
+      const response = await axioxFrontClient(
+        token
+      ).post<HttpItemCategoryResponse>("/category", payload);
       const { data } = response;
 
       addCategory(data.data);

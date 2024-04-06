@@ -1,8 +1,12 @@
 "use client";
 
-import layoutStyle from "@/app/_components/dashboard/styles/layout.module.css";
+import { FormEvent } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Cookies from "js-cookie";
+import useDashboard from "../useDashboard";
+import { axioxFrontClient } from "@/app/_utils/axiosClient";
+import layoutStyle from "@/app/_components/dashboard/styles/layout.module.css";
 
 const dashboardPages = [
   { name: "Dashboard", pathname: "/dashboard" },
@@ -11,7 +15,22 @@ const dashboardPages = [
 ];
 
 export default function DashboardLayoutAside() {
+  const { token } = useDashboard();
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      axioxFrontClient(token).post("/auth/logout");
+    } catch (error) {
+      console.log("some error when logging out");
+    }
+
+    Cookies.remove("access_token");
+    router.push("/login");
+  };
 
   return (
     <aside className="bg-gradient-to-br from-gray-800 to-gray-900 -translate-x-80 fixed inset-0 z-10 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0">
@@ -78,33 +97,35 @@ export default function DashboardLayoutAside() {
         <ul className="mb-4 flex flex-col gap-1">
           <li className="mx-3.5 mt-4 mb-2">
             <p className="block antialiased text-sm leading-normal text-white font-black uppercase opacity-75">
-              auth pages
+              auth
             </p>
           </li>
           <li>
-            <a className="" href="#">
-              <button
-                className="middle none font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize"
-                type="button"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="w-5 h-5 text-inherit"
+            <form onSubmit={handleLogout}>
+              <a className="" href="#">
+                <button
+                  className="middle none font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize"
+                  type="submit"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm10.72 4.72a.75.75 0 011.06 0l3 3a.75.75 0 010 1.06l-3 3a.75.75 0 11-1.06-1.06l1.72-1.72H9a.75.75 0 010-1.5h10.94l-1.72-1.72a.75.75 0 010-1.06z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                <p className="block antialiased text-base leading-relaxed text-inherit font-medium capitalize">
-                  sign in
-                </p>
-              </button>
-            </a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                    className="w-5 h-5 text-inherit"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm10.72 4.72a.75.75 0 011.06 0l3 3a.75.75 0 010 1.06l-3 3a.75.75 0 11-1.06-1.06l1.72-1.72H9a.75.75 0 010-1.5h10.94l-1.72-1.72a.75.75 0 010-1.06z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                  <p className="block antialiased text-base leading-relaxed text-inherit font-medium capitalize">
+                    sign out
+                  </p>
+                </button>
+              </a>
+            </form>
           </li>
         </ul>
       </div>

@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
+import useDashboard from "../useDashboard";
 import useCategory from "./useCategory";
 import { useCategoryStore } from "@/app/_store/zustand";
 import { axioxFrontClient } from "@/app/_utils/axiosClient";
@@ -20,6 +21,7 @@ const initialState: UpdateCategoryResponseType = {
 };
 
 export default function EditCategoryModal() {
+  const { token } = useDashboard();
   const [formState, formAction] = useFormState(
     updateCategoryAction,
     initialState
@@ -32,9 +34,9 @@ export default function EditCategoryModal() {
   useEffect(() => {
     const getCategory = async () => {
       try {
-        const response = await axioxFrontClient.get<HttpItemCategoryResponse>(
-          "/category/" + category_id
-        );
+        const response = await axioxFrontClient(
+          token
+        ).get<HttpItemCategoryResponse>("/category/" + category_id);
         setCategory(response.data.data);
       } catch (error) {
         console.log(error);

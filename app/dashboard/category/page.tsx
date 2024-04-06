@@ -1,23 +1,25 @@
 "use client";
 
-import CategoryTable from "@/app/_components/dashboard/category/categoryTable";
-import { HttpDataCategoryResponse, HttpErrorResponse } from "@/app/_types";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { axioxFrontClient } from "@/app/_utils/axiosClient";
+import useDashboard from "@/app/_components/dashboard/useDashboard";
 import { useCategoryStore } from "@/app/_store/zustand";
+import { axioxFrontClient } from "@/app/_utils/axiosClient";
+import { HttpDataCategoryResponse, HttpErrorResponse } from "@/app/_types";
+import CategoryTable from "@/app/_components/dashboard/category/categoryTable";
 
 export default function CategoryPage() {
+  const { token } = useDashboard();
   const { setCategories } = useCategoryStore();
   const router = useRouter();
 
   useEffect(() => {
     const getCategoriesData = async () => {
       try {
-        const response = await axioxFrontClient.get<HttpDataCategoryResponse>(
-          "/category"
-        );
+        const response = await axioxFrontClient(
+          token
+        ).get<HttpDataCategoryResponse>("/category");
         const { data } = response;
 
         setCategories(data.data);
