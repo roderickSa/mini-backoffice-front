@@ -1,34 +1,48 @@
 "use client";
 
-import getCategoriesAction from "@/app/_api/getCategoriesAction";
 import CategoryTable from "@/app/_components/dashboard/category/categoryTable";
-import { CategoryType } from "@/app/_types";
-import { cookies } from "next/headers";
+import { HttpDataCategoryResponse, HttpErrorResponse } from "@/app/_types";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Cookies from "js-cookie";
+import { axioxFrontClient } from "@/app/_utils/axiosClient";
+import { useCategoryStore } from "@/app/_store/zustand";
 
 export default function CategoryPage() {
-  const [categories, setCategories] = useState<CategoryType[]>([]);
+  const { setCategories } = useCategoryStore();
   const router = useRouter();
 
   useEffect(() => {
     const getCategoriesData = async () => {
-      const categoriesAction = await getCategoriesAction();
-      const { error, data } = categoriesAction;
+      try {
+        const response = await axioxFrontClient.get<HttpDataCategoryResponse>(
+          "/category"
+        );
+        const { data } = response;
 
-      if (error?.status === 401) {
-        Cookies.remove("access_token");
-        router.push("/login");
-        return;
+        setCategories(data.data);
+      } catch (error) {
+        if (
+          (error as HttpErrorResponse).response?.status === 401 ||
+          ["Unauthenticated", "Unauthorized"].includes(
+            (error as HttpErrorResponse).response?.data.data.errors[0].message
+          )
+        ) {
+          const message = (error as HttpErrorResponse).response?.data.data
+            .errors[0].message;
+
+          Cookies.remove("access_token");
+          router.push("/login");
+          return;
+        }
+
+        console.log(error);
       }
-
-      setCategories(data);
     };
 
     getCategoriesData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <CategoryTable categories={categories} />;
+  return <CategoryTable />;
 }

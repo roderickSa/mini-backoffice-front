@@ -1,10 +1,22 @@
-import { CategoryType } from "@/app/_types";
+import CategoryModal from "./categoryModal";
+import { useCategoryStore } from "@/app/_store/zustand";
+import useCategory from "./useCategory";
+import { useEffect } from "react";
 
-export default function CategoryTable({
-  categories,
-}: {
-  categories: CategoryType[];
-}) {
+export default function CategoryTable({}: {}) {
+  const { categories, stateModal, setOpenModal } = useCategoryStore();
+  const { handleStartEditCategory, getUrlParam } = useCategory();
+
+  const action = getUrlParam("action");
+  const category_id = getUrlParam("category_id");
+
+  useEffect(() => {
+    if (action && category_id) {
+      setOpenModal();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
       <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-2">
@@ -67,6 +79,11 @@ export default function CategoryTable({
                     Name
                   </p>
                 </th>
+                <th className="border-b border-blue-gray-50 py-3 px-6 text-left">
+                  <p className="block antialiased text-[11px] font-medium uppercase text-blue-gray-400">
+                    Action
+                  </p>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -79,12 +96,25 @@ export default function CategoryTable({
                       </p>
                     </div>
                   </td>
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <div className="flex items-center gap-4">
+                      <p className="block antialiased text-sm leading-normal text-blue-gray-900 font-bold">
+                        <button
+                          className="middle none font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
+                          onClick={() => handleStartEditCategory(category.id)}
+                        >
+                          Edit
+                        </button>
+                      </p>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+      {stateModal && <CategoryModal />}
     </div>
   );
 }

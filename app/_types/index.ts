@@ -24,6 +24,10 @@ interface HttpDataCategoryResponse {
   data: CategoryType[];
 }
 
+interface HttpItemCategoryResponse {
+  data: CategoryType;
+}
+
 type CategoryType = {
   id: number;
   name: string;
@@ -58,6 +62,7 @@ enum UserRole {
 export type {
   HttpLoginResponse,
   HttpDataCategoryResponse,
+  HttpItemCategoryResponse,
   CategoryType,
   FrontCategoryDataType,
   ErrorResponse,
