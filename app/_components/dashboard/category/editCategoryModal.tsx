@@ -1,10 +1,10 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import useCategory from "./useCategory";
-import { axioxFrontClient } from "@/app/_utils/axiosClient";
-import { CategoryType, HttpItemCategoryResponse } from "@/app/_types";
-import updateCategoryAction from "@/app/_api/updateCategoryAction";
 import { useFormState } from "react-dom";
+import useCategory from "./useCategory";
 import { useCategoryStore } from "@/app/_store/zustand";
+import { axioxFrontClient } from "@/app/_utils/axiosClient";
+import updateCategoryAction from "@/app/_api/updateCategoryAction";
+import { CategoryType, HttpItemCategoryResponse } from "@/app/_types";
 
 interface UpdateCategoryResponseType {
   error: {
@@ -19,7 +19,7 @@ const initialState: UpdateCategoryResponseType = {
   data: null,
 };
 
-export default function CategoryModal() {
+export default function EditCategoryModal() {
   const [formState, formAction] = useFormState(
     updateCategoryAction,
     initialState
@@ -67,7 +67,7 @@ export default function CategoryModal() {
       <div role="alert" className="container mx-auto w-11/12 md:w-2/3 max-w-lg">
         <div className="relative py-8 px-5 md:px-10 bg-white shadow-md rounded border border-gray-400">
           <h1 className="text-gray-800 font-lg font-bold tracking-normal leading-tight mb-4">
-            Enter New Category
+            Edit Category
           </h1>
           <label
             htmlFor="name"

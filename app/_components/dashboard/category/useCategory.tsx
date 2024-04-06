@@ -1,11 +1,34 @@
-import { useCategoryStore } from "@/app/_store/zustand";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCategoryStore } from "@/app/_store/zustand";
 
 export default function useCategory() {
-  const { setOpenModal, setCloseModal } = useCategoryStore();
+  const {
+    setOpenCreateModal,
+    setCloseCreateModal,
+    setOpenEditModal,
+    setCloseEditModal,
+  } = useCategoryStore();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+
+  const handleStartCreateCategory = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set("action", "create");
+
+    replace(`${pathname}?${params.toString()}`);
+    setOpenCreateModal();
+  };
+
+  const handleCloseCreateCategory = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete("action");
+
+    replace(pathname);
+    setCloseCreateModal();
+  };
 
   const handleStartEditCategory = (category_id: number) => {
     const params = new URLSearchParams(searchParams);
@@ -14,7 +37,7 @@ export default function useCategory() {
     params.set("category_id", category_id.toString());
 
     replace(`${pathname}?${params.toString()}`);
-    setOpenModal();
+    setOpenEditModal();
   };
 
   const handleCloseEditCategory = () => {
@@ -24,7 +47,7 @@ export default function useCategory() {
     params.delete("category_id");
 
     replace(pathname);
-    setCloseModal();
+    setCloseEditModal();
   };
 
   const getUrlParam = (key: string) => {
@@ -34,6 +57,8 @@ export default function useCategory() {
   };
 
   return {
+    handleStartCreateCategory,
+    handleCloseCreateCategory,
     handleStartEditCategory,
     handleCloseEditCategory,
     getUrlParam,
