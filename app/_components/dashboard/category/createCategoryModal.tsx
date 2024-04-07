@@ -1,16 +1,14 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import useDashboard from "../useDashboard";
-import useCategory from "./useCategory";
 import { useCategoryStore } from "@/app/_store/zustand";
 import { axioxFrontClient } from "@/app/_utils/axiosClient";
 import { HttpErrorResponse, HttpItemCategoryResponse } from "@/app/_types";
 
 function CreateCategoryModal() {
-  const { token } = useDashboard();
-  const { addCategory } = useCategoryStore();
+  const { token, handleCloseCreateModel } = useDashboard();
+  const { addCategory, setCloseCreateModal } = useCategoryStore();
   const [categoryName, setCategoryName] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const { handleCloseCreateCategory } = useCategory();
 
   const handleCreateCategory = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,7 +25,7 @@ function CreateCategoryModal() {
       const { data } = response;
 
       addCategory(data.data);
-      handleCloseCreateCategory();
+      handleCloseCreateModal();
       return;
     } catch (error) {
       if (
@@ -45,6 +43,11 @@ function CreateCategoryModal() {
 
       console.log("unidentified error");
     }
+  };
+
+  const handleCloseCreateModal = () => {
+    handleCloseCreateModel();
+    setCloseCreateModal();
   };
 
   return (
@@ -90,7 +93,7 @@ function CreateCategoryModal() {
             </button>
             <button
               className="border px-4 py-2 rounded-lg shadow ring-1 ring-inset"
-              onClick={handleCloseCreateCategory}
+              onClick={handleCloseCreateModal}
             >
               Cancel
             </button>
@@ -99,7 +102,7 @@ function CreateCategoryModal() {
             className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600"
             aria-label="close modal"
             role="button"
-            onClick={handleCloseCreateCategory}
+            onClick={handleCloseCreateModal}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

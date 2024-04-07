@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import useCategory from "./useCategory";
+import useDashboard from "../useDashboard";
 import { useCategoryStore } from "@/app/_store/zustand";
 import CreateCategoryModal from "./createCategoryModal";
 import EditCategoryModal from "./editCategoryModal";
@@ -13,7 +13,7 @@ export default function Category() {
     setOpenEditModal,
     setOpenCreateModal,
   } = useCategoryStore();
-  const { handleStartCreateCategory, getUrlParam } = useCategory();
+  const { handleStartCreateModel, getUrlParam } = useDashboard();
 
   const action = getUrlParam("action");
   const category_id = getUrlParam("category_id");
@@ -29,6 +29,11 @@ export default function Category() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleOpenCreateModal = () => {
+    handleStartCreateModel();
+    setOpenCreateModal();
+  };
 
   return (
     <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
@@ -60,7 +65,7 @@ export default function Category() {
           <div>
             <button
               className="middle none font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize bg-gradient-to-tr from-gray-600 to-gray-400 shadow-md shadow-gray-500/20 hover:shadow-lg hover:shadow-gray-500/40 active:opacity-[0.85]"
-              onClick={handleStartCreateCategory}
+              onClick={handleOpenCreateModal}
             >
               Nuevo
             </button>

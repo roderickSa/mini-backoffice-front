@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import useDashboard from "../useDashboard";
-import useCategory from "./useCategory";
 import { useCategoryStore } from "@/app/_store/zustand";
 import { axioxFrontClient } from "@/app/_utils/axiosClient";
 import updateCategoryAction from "@/app/_api/updateCategoryAction";
@@ -21,14 +20,13 @@ const initialState: UpdateCategoryResponseType = {
 };
 
 export default function EditCategoryModal() {
-  const { token } = useDashboard();
+  const { token, getUrlParam, handleCloseEditModel } = useDashboard();
   const [formState, formAction] = useFormState(
     updateCategoryAction,
     initialState
   );
-  const { updateCategory } = useCategoryStore();
+  const { updateCategory, setCloseEditModal } = useCategoryStore();
   const [category, setCategory] = useState<CategoryType>();
-  const { handleCloseEditCategory, getUrlParam } = useCategory();
   const category_id = getUrlParam("category_id");
 
   useEffect(() => {
@@ -50,7 +48,7 @@ export default function EditCategoryModal() {
   useEffect(() => {
     if (formState.data?.id) {
       updateCategory(formState.data);
-      handleCloseEditCategory();
+      handleCloseEditModal();
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,6 +57,11 @@ export default function EditCategoryModal() {
   if (!category) {
     return <></>;
   }
+
+  const handleCloseEditModal = () => {
+    handleCloseEditModel("category");
+    setCloseEditModal();
+  };
 
   return (
     <form
@@ -105,7 +108,7 @@ export default function EditCategoryModal() {
             </button>
             <button
               className="border px-4 py-2 rounded-lg shadow ring-1 ring-inset"
-              onClick={handleCloseEditCategory}
+              onClick={handleCloseEditModal}
             >
               Cancel
             </button>
@@ -114,7 +117,7 @@ export default function EditCategoryModal() {
             className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600"
             aria-label="close modal"
             role="button"
-            onClick={handleCloseEditCategory}
+            onClick={handleCloseEditModal}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

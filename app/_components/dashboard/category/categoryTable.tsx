@@ -1,9 +1,14 @@
-import useCategory from "./useCategory";
+import useDashboard from "../useDashboard";
 import { useCategoryStore } from "@/app/_store/zustand";
 
 export default function CategoryTable({}: {}) {
-  const { categories } = useCategoryStore();
-  const { handleStartEditCategory } = useCategory();
+  const { categories, setOpenEditModal } = useCategoryStore();
+  const { handleStartEditModel } = useDashboard();
+
+  const handleEditCategory = (category_id: number) => {
+    handleStartEditModel(category_id, "category");
+    setOpenEditModal();
+  };
 
   return (
     <table className="w-full min-w-[640px] table-auto">
@@ -36,7 +41,7 @@ export default function CategoryTable({}: {}) {
                 <p className="block antialiased text-sm leading-normal text-blue-gray-900 font-bold">
                   <button
                     className="middle none font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
-                    onClick={() => handleStartEditCategory(category.id)}
+                    onClick={() => handleEditCategory(category.id)}
                   >
                     Edit
                   </button>
