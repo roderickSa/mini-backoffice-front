@@ -1,3 +1,10 @@
+import {
+  ProductType,
+  HttpDataProductResponse,
+  HttpItemPoductResponse,
+  FrontProductDataType,
+} from "@/app/_types/product";
+
 interface HttpErrorResponse {
   response: {
     data: ErrorResponse;
@@ -67,4 +74,8 @@ export type {
   FrontCategoryDataType,
   ErrorResponse,
   HttpErrorResponse,
+  ProductType,
+  HttpDataProductResponse,
+  HttpItemPoductResponse,
+  FrontProductDataType,
 };
