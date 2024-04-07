@@ -7,7 +7,7 @@ import useDashboard from "@/app/_components/dashboard/useDashboard";
 import { useCategoryStore } from "@/app/_store/zustand";
 import { axioxFrontClient } from "@/app/_utils/axiosClient";
 import { HttpDataCategoryResponse, HttpErrorResponse } from "@/app/_types";
-import CategoryTable from "@/app/_components/dashboard/category/categoryTable";
+import Category from "@/app/_components/dashboard/category/category";
 
 export default function CategoryPage() {
   const { token } = useDashboard();
@@ -46,5 +46,5 @@ export default function CategoryPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <CategoryTable />;
+  return <Category />;
 }
