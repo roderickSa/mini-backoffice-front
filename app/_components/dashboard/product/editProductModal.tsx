@@ -1,22 +1,29 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { axioxFrontClient } from "@/app/_utils/axiosClient";
 import useDashboard from "../useDashboard";
 import { useProductStore } from "@/app/_store/zustand";
-import { HttpItemPoductResponse, ProductType } from "@/app/_types";
+import {
+  HttpErrorResponse,
+  HttpItemProductResponse,
+  ProductType,
+} from "@/app/_types";
 import productStatuses from "@/app/_utils/productStatuses";
+import { PayloadProductType } from "@/app/_types/product";
+import { handleProductFormValidation } from "@/app/_utils/validations";
 
 export default function EditProductModal() {
   const { token, getUrlParam, handleCloseEditModel } = useDashboard();
-  const { setCloseEditModal, categories } = useProductStore();
+  const { setCloseEditModal, categories, updateProduct } = useProductStore();
   const product_id = getUrlParam("product_id");
   const [product, setProduct] = useState<ProductType>();
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     const getProduct = async () => {
       try {
         const response = await axioxFrontClient(
           token
-        ).get<HttpItemPoductResponse>("/product/" + product_id);
+        ).get<HttpItemProductResponse>("/product/" + product_id);
         setProduct(response.data.data);
       } catch (error) {
         console.log(error);
@@ -26,6 +33,46 @@ export default function EditProductModal() {
     product_id && getProduct();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product_id]);
+
+  const handleEditProduct = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!product) return;
+
+    const [validationResponse, errorMessageResponse] =
+      handleProductFormValidation(product);
+    if (!validationResponse) {
+      setErrorMessage(errorMessageResponse);
+      return;
+    }
+
+    const payload: PayloadProductType = product;
+    try {
+      const response = await axioxFrontClient(
+        token
+      ).patch<HttpItemProductResponse>("/product/" + product.id, payload);
+      const { data } = response;
+
+      updateProduct(data.data);
+      handleCloseEditModal();
+      return;
+    } catch (error) {
+      if (
+        (error as HttpErrorResponse).response?.status === 401 ||
+        ["Unauthenticated", "Unauthorized"].includes(
+          (error as HttpErrorResponse).response?.data.data.errors[0].message
+        )
+      ) {
+        const message = (error as HttpErrorResponse).response?.data.data
+          .errors[0].message;
+
+        setErrorMessage(message);
+        return;
+      }
+
+      console.log("unidentified error");
+    }
+  };
 
   const handleCloseEditModal = () => {
     handleCloseEditModel("product");
@@ -59,6 +106,7 @@ export default function EditProductModal() {
 
   return (
     <form
+      onSubmit={handleEditProduct}
       className="py-12 transition duration-150 ease-in-out z-20 absolute top-0 right-0 bottom-0 left-0 bg-gray-600 bg-opacity-75"
       id="modal"
     >
@@ -165,13 +213,13 @@ export default function EditProductModal() {
               </option>
             ))}
           </select>
-          {/* <p
-        className={`text-sm mt-2 px-2 text-red-600 ${
-          formState?.error?.message ? "" : "hidden"
-        }`}
-      >
-        {formState?.error?.message}
-      </p> */}
+          <p
+            className={`text-sm mt-2 px-2 text-red-600 ${
+              errorMessage.trim().length > 0 ? "" : "hidden"
+            }`}
+          >
+            {errorMessage}
+          </p>
           <div className="flex items-center justify-evenly w-full">
             <button
               type="submit"

@@ -13,6 +13,15 @@ type ProductType = {
   updated_at: string;
 };
 
+interface PayloadProductType {
+  name: string;
+  description?: string;
+  category_id: number;
+  stock: number;
+  price: number;
+  status: number;
+}
+
 type MetaProductType = {
   current_page: number;
   from: number;
@@ -27,7 +36,7 @@ interface HttpDataProductResponse {
   meta: MetaProductType;
 }
 
-interface HttpItemPoductResponse {
+interface HttpItemProductResponse {
   data: ProductType;
 }
 
@@ -38,7 +47,8 @@ type FrontProductDataType = {
 
 export type {
   ProductType,
+  PayloadProductType,
   HttpDataProductResponse,
-  HttpItemPoductResponse,
+  HttpItemProductResponse,
   FrontProductDataType,
 };

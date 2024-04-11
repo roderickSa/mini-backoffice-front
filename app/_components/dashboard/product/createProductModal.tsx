@@ -1,28 +1,65 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import useDashboard from "../useDashboard";
 import { useProductStore } from "@/app/_store/zustand";
 import productStatuses from "@/app/_utils/productStatuses";
-
-type ProductUpdateType = {
-  name: string;
-  description?: string;
-  category_id: number;
-  stock?: number;
-  price?: number;
-  status?: number;
-};
+import { HttpErrorResponse, HttpItemProductResponse } from "@/app/_types";
+import { axioxFrontClient } from "@/app/_utils/axiosClient";
+import { PayloadProductType } from "@/app/_types/product";
+import { handleProductFormValidation } from "@/app/_utils/validations";
 
 export default function CreateProductModal() {
-  const { handleCloseCreateModel } = useDashboard();
-  const { categories, setCloseCreateModal } = useProductStore();
-  const [product, setProduct] = useState<ProductUpdateType>({
+  const { token, handleCloseCreateModel } = useDashboard();
+  const { categories, setCloseCreateModal, addProduct } = useProductStore();
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [product, setProduct] = useState<PayloadProductType>({
     name: "",
     description: "",
-    category_id: 0,
+    category_id: categories[0].id,
     stock: 0,
     price: 0.0,
-    status: 0,
+    status: productStatuses[0].value,
   });
+
+  const handleCreateProduct = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    setErrorMessage("");
+    if (!product) return;
+
+    const [validationResponse, errorMessageResponse] =
+      handleProductFormValidation(product);
+    if (!validationResponse) {
+      setErrorMessage(errorMessageResponse);
+      return;
+    }
+
+    const payload: PayloadProductType = product;
+    try {
+      const response = await axioxFrontClient(
+        token
+      ).post<HttpItemProductResponse>("/product", payload);
+      const { data } = response;
+
+      addProduct(data.data);
+      handleCloseCreateModal();
+      return;
+    } catch (error) {
+      if (
+        (error as HttpErrorResponse).response?.status === 401 ||
+        ["Unauthenticated", "Unauthorized"].includes(
+          (error as HttpErrorResponse).response?.data.data.errors[0].message
+        )
+      ) {
+        const message = (error as HttpErrorResponse).response?.data.data
+          .errors[0].message;
+
+        setErrorMessage(message);
+        return;
+      }
+
+      console.log("unidentified error");
+    }
+  };
 
   const handleSetFormValues = (
     event: ChangeEvent<
@@ -52,6 +89,7 @@ export default function CreateProductModal() {
 
   return (
     <form
+      onSubmit={handleCreateProduct}
       className="py-12 transition duration-150 ease-in-out z-20 absolute top-0 right-0 bottom-0 left-0 bg-gray-600 bg-opacity-75"
       id="modal"
     >
@@ -100,7 +138,7 @@ export default function CreateProductModal() {
             type="number"
             className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
             placeholder="Stock"
-            value={product?.stock}
+            value={product.stock}
             onChange={handleSetFormValues}
           />
           <label
@@ -116,7 +154,7 @@ export default function CreateProductModal() {
             step="0.01"
             className="mb-5 mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
             placeholder="Price"
-            value={product?.price}
+            value={product.price}
             onChange={handleSetFormValues}
           />
           <label
@@ -157,19 +195,19 @@ export default function CreateProductModal() {
               </option>
             ))}
           </select>
-          {/* <p
-        className={`text-sm mt-2 px-2 text-red-600 ${
-          formState?.error?.message ? "" : "hidden"
-        }`}
-      >
-        {formState?.error?.message}
-      </p> */}
+          <p
+            className={`text-sm mt-2 px-2 text-red-600 ${
+              errorMessage.trim().length > 0 ? "" : "hidden"
+            }`}
+          >
+            {errorMessage}
+          </p>
           <div className="flex items-center justify-evenly w-full">
             <button
               type="submit"
               className="border px-4 py-2 rounded-lg shadow ring-1 ring-inset"
             >
-              Actualizar
+              Crear
             </button>
             <button
               className="border px-4 py-2 rounded-lg shadow ring-1 ring-inset"

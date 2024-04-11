@@ -1,7 +1,7 @@
 import {
   ProductType,
   HttpDataProductResponse,
-  HttpItemPoductResponse,
+  HttpItemProductResponse,
   FrontProductDataType,
 } from "@/app/_types/product";
 
@@ -76,6 +76,6 @@ export type {
   HttpErrorResponse,
   ProductType,
   HttpDataProductResponse,
-  HttpItemPoductResponse,
+  HttpItemProductResponse,
   FrontProductDataType,
 };
