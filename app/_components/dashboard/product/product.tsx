@@ -1,14 +1,18 @@
 import { useEffect } from "react";
 import useDashboard from "../useDashboard";
+import useProduct from "./useProduct";
 import { useProductStore } from "@/app/_store/zustand";
 import ProductTable from "./productTable";
 import EditProductModal from "./editProductModal";
 import CreateProductModal from "./createProductModal";
+import Pagination from "../../pagination";
 
 export default function Product() {
   const { getUrlParam, handleStartCreateModel } = useDashboard();
+  const { getProductsData } = useProduct();
   const {
     products,
+    metaProducts,
     setOpenCreateModal,
     setOpenEditModal,
     stateCreateModal,
@@ -74,6 +78,10 @@ export default function Product() {
         <div className="p-6 overflow-x-scroll px-0 pt-0 pb-2">
           <ProductTable />
         </div>
+        <Pagination
+          metaProducts={metaProducts}
+          paginationCall={getProductsData}
+        />
       </div>
       {stateEditModal && <EditProductModal />}
       {stateCreateModal && <CreateProductModal />}

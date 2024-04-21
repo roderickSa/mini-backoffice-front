@@ -22,6 +22,12 @@ interface PayloadProductType {
   status: number;
 }
 
+type MetaLinksProductType = {
+  active: boolean;
+  label: string;
+  url: string;
+};
+
 type MetaProductType = {
   current_page: number;
   from: number;
@@ -29,6 +35,7 @@ type MetaProductType = {
   per_page: number;
   to: number;
   total: number;
+  links: MetaLinksProductType[];
 };
 
 interface HttpDataProductResponse {
@@ -47,6 +54,7 @@ type FrontProductDataType = {
 
 export type {
   ProductType,
+  MetaProductType,
   PayloadProductType,
   HttpDataProductResponse,
   HttpItemProductResponse,

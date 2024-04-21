@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { CategoryType, ProductType } from "../_types";
+import { MetaProductType } from "../_types/product";
 
 type CategoryStore = {
   categories: CategoryType[];
@@ -40,6 +41,8 @@ type ProductStore = {
   setCategories: (data: CategoryType[]) => void;
   products: ProductType[];
   setProducts: (data: ProductType[]) => void;
+  metaProducts: MetaProductType | null;
+  setMetaProducts: (data: MetaProductType) => void;
   addProduct: (data: ProductType) => void;
   updateProduct: (data: ProductType) => void;
   stateCreateModal: boolean;
@@ -55,6 +58,8 @@ export const useProductStore = create<ProductStore>((set) => ({
   setCategories: (data: CategoryType[]) => set({ categories: data }),
   products: [],
   setProducts: (data: ProductType[]) => set({ products: data }),
+  metaProducts: null,
+  setMetaProducts: (data: MetaProductType) => set({ metaProducts: data }),
   addProduct: (data: ProductType) =>
     set((state) => ({
       products: [...state.products, data],

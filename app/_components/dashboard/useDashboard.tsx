@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function useDashboard() {
   const access_token = Cookies.get("access_token");
@@ -21,7 +21,7 @@ export default function useDashboard() {
     const params = new URLSearchParams(searchParams);
     params.delete("action");
 
-    replace(pathname);
+    replace(`${pathname}?${params.toString()}`);
   };
 
   const handleStartEditModel = (model_id: number, type: string) => {
@@ -42,8 +42,16 @@ export default function useDashboard() {
       params.delete("action");
       params.delete(type + "_id");
 
-      replace(pathname);
+      replace(`${pathname}?${params.toString()}`);
     }
+  };
+
+  const handleSetUrlPagePagination = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+
+    params.set("page", page.toString());
+
+    replace(`${pathname}?${params.toString()}`);
   };
 
   const getUrlParam = (key: string) => {
@@ -64,6 +72,7 @@ export default function useDashboard() {
     handleCloseCreateModel,
     handleStartEditModel,
     handleCloseEditModel,
+    handleSetUrlPagePagination,
     getUrlParam,
   };
 }
