@@ -8,13 +8,16 @@ import useDashboard from "../useDashboard";
 import { axioxFrontClient } from "@/app/_utils/axiosClient";
 import layoutStyle from "@/app/_components/dashboard/styles/layout.module.css";
 
-const dashboardPages = [
-  { name: "Dashboard", pathname: "/dashboard" },
-  { name: "Products", pathname: "/dashboard/product" },
-  { name: "Category", pathname: "/dashboard/category" },
-];
+type Prop = {
+  name: string;
+  pathname: string;
+};
 
-export default function DashboardLayoutAside() {
+export default function DashboardLayoutAside({
+  dashboardPages,
+}: {
+  dashboardPages: Prop[];
+}) {
   const { token } = useDashboard();
   const pathname = usePathname();
   const router = useRouter();

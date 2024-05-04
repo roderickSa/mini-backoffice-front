@@ -33,6 +33,7 @@ export default function CategoryPage() {
           const message = (error as HttpErrorResponse).response?.data.data
             .errors[0].message;
 
+          /* TODO: do this validation on all http calls to the backend */
           Cookies.remove("access_token");
           router.push("/login");
           return;

@@ -10,6 +10,12 @@ export const metadata: Metadata = {
   description: "Mini backoffice project app",
 };
 
+const dashboardPages = [
+  { name: "Dashboard", pathname: "/dashboard" },
+  { name: "Products", pathname: "/dashboard/product" },
+  { name: "Category", pathname: "/dashboard/category" },
+];
+
 export default function DashboardLayout({
   children,
 }: {
@@ -17,9 +23,9 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="min-h-screen bg-gray-50/50">
-      <DashboardLayoutAside />
+      <DashboardLayoutAside dashboardPages={dashboardPages} />
       <div className="p-4 xl:ml-80">
-        <DashboardLayoutNavbar />
+        <DashboardLayoutNavbar dashboardPages={dashboardPages} />
         {children}
         <div className="text-blue-gray-600">
           <footer className="py-2"></footer>
