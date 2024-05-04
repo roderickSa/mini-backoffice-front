@@ -2,12 +2,17 @@ import useDashboard from "../useDashboard";
 import { useProductStore } from "@/app/_store/zustand";
 
 export default function ProductTable() {
-  const { handleStartEditModel } = useDashboard();
-  const { products, setOpenEditModal } = useProductStore();
+  const { handleStartEditModel, handleStartImagesModel } = useDashboard();
+  const { products, setOpenEditModal, setOpenImagesModal } = useProductStore();
 
   const handleEditProduct = (product_id: number) => {
     handleStartEditModel(product_id, "product");
     setOpenEditModal();
+  };
+
+  const handleImagesProduct = (product_id: number) => {
+    handleStartImagesModel(product_id);
+    setOpenImagesModal();
   };
 
   return (
@@ -54,7 +59,10 @@ export default function ProductTable() {
               updated_at
             </p>
           </th>
-          <th className="border-b border-blue-gray-50 py-3 px-6 text-left">
+          <th
+            className="border-b border-blue-gray-50 py-3 px-6 text-center"
+            colSpan={2}
+          >
             <p className="block antialiased text-[11px] font-medium uppercase text-blue-gray-400">
               action
             </p>
@@ -114,6 +122,14 @@ export default function ProductTable() {
                     onClick={() => handleEditProduct(product.id)}
                   >
                     Edit
+                  </button>
+                </p>
+                <p className="block antialiased text-sm leading-normal text-blue-gray-900 font-bold">
+                  <button
+                    className="middle none font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
+                    onClick={() => handleImagesProduct(product.id)}
+                  >
+                    Images
                   </button>
                 </p>
               </div>

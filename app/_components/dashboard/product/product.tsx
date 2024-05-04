@@ -6,6 +6,7 @@ import ProductTable from "./productTable";
 import EditProductModal from "./editProductModal";
 import CreateProductModal from "./createProductModal";
 import Pagination from "../../pagination";
+import ImagesProductModal from "./imagesProductModal";
 
 export default function Product() {
   const { getUrlParam, handleStartCreateModel } = useDashboard();
@@ -15,8 +16,10 @@ export default function Product() {
     metaProducts,
     setOpenCreateModal,
     setOpenEditModal,
+    setOpenImagesModal,
     stateCreateModal,
     stateEditModal,
+    stateImagesModal,
   } = useProductStore();
 
   const action = getUrlParam("action");
@@ -29,6 +32,9 @@ export default function Product() {
       }
       if (action === "edit" && product_id && !isNaN(parseInt(product_id))) {
         setOpenEditModal();
+      }
+      if (action === "images" && product_id && !isNaN(parseInt(product_id))) {
+        setOpenImagesModal();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,6 +90,7 @@ export default function Product() {
         />
       </div>
       {stateEditModal && <EditProductModal />}
+      {stateImagesModal && <ImagesProductModal />}
       {stateCreateModal && <CreateProductModal />}
     </div>
   );

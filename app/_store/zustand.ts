@@ -45,12 +45,17 @@ type ProductStore = {
   setMetaProducts: (data: MetaProductType) => void;
   addProduct: (data: ProductType) => void;
   updateProduct: (data: ProductType) => void;
+  currentProduct: ProductType | undefined;
+  setCurrentProduct: (data: ProductType) => void;
   stateCreateModal: boolean;
   setOpenCreateModal: () => void;
   setCloseCreateModal: () => void;
   stateEditModal: boolean;
   setOpenEditModal: () => void;
   setCloseEditModal: () => void;
+  stateImagesModal: boolean;
+  setOpenImagesModal: () => void;
+  setCloseImagesModal: () => void;
 };
 
 export const useProductStore = create<ProductStore>((set) => ({
@@ -70,10 +75,16 @@ export const useProductStore = create<ProductStore>((set) => ({
         Product.id === data.id ? { ...data } : Product
       ),
     })),
+  currentProduct: undefined,
+  setCurrentProduct: (product: ProductType) =>
+    set((state) => ({ currentProduct: product })),
   stateCreateModal: false,
   setOpenCreateModal: () => set((state) => ({ stateCreateModal: true })),
   setCloseCreateModal: () => set((state) => ({ stateCreateModal: false })),
   stateEditModal: false,
   setOpenEditModal: () => set((state) => ({ stateEditModal: true })),
   setCloseEditModal: () => set((state) => ({ stateEditModal: false })),
+  stateImagesModal: false,
+  setOpenImagesModal: () => set((state) => ({ stateImagesModal: true })),
+  setCloseImagesModal: () => set((state) => ({ stateImagesModal: false })),
 }));

@@ -39,3 +39,18 @@ export const axioxFrontClient = (access_token: string) =>
       },
     ],
   });
+
+  export const axiosFormClient = (access_token: string) =>
+    axios.create({
+      baseURL: BASE_URL_BACK,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
+        Authorization: "Bearer " + access_token,
+      },
+      transformResponse: [
+        (data) => {
+          return JSON.parse(data);
+        },
+      ],
+    });

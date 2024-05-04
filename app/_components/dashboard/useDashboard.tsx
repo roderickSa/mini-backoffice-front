@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+/* TODO: reuse functions */
 export default function useDashboard() {
   const access_token = Cookies.get("access_token");
   const [token, setToken] = useState<string>(access_token || "");
@@ -27,7 +28,7 @@ export default function useDashboard() {
   const handleStartEditModel = (model_id: number, type: string) => {
     const params = new URLSearchParams(searchParams);
 
-    if (["category", "product"].includes(type)) {
+    if (["category", "product", "images"].includes(type)) {
       params.set("action", "edit");
       params.set(type + "_id", model_id.toString());
 
@@ -38,12 +39,29 @@ export default function useDashboard() {
   const handleCloseEditModel = (type: string) => {
     const params = new URLSearchParams(searchParams);
 
-    if (["category", "product"].includes(type)) {
+    if (["category", "product", "images"].includes(type)) {
       params.delete("action");
       params.delete(type + "_id");
 
       replace(`${pathname}?${params.toString()}`);
     }
+  };
+
+  const handleStartImagesModel = (product_id: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("action", "images");
+    params.set("product_id", product_id.toString());
+
+    replace(`${pathname}?${params.toString()}`);
+  };
+
+  const handleCloseImagesModel = () => {
+    const params = new URLSearchParams(searchParams);
+
+    params.delete("action");
+    params.delete("product_id");
+
+    replace(`${pathname}?${params.toString()}`);
   };
 
   const handleSetUrlPagePagination = (page: number) => {
@@ -72,6 +90,8 @@ export default function useDashboard() {
     handleCloseCreateModel,
     handleStartEditModel,
     handleCloseEditModel,
+    handleStartImagesModel,
+    handleCloseImagesModel,
     handleSetUrlPagePagination,
     getUrlParam,
   };

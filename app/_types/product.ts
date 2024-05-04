@@ -7,6 +7,7 @@ type ProductType = {
   status: number;
   category_id: number;
   category_name: string;
+  images: ProductImageType[];
   created_by: string;
   updated_by: string;
   created_at: string;
@@ -20,6 +21,13 @@ interface PayloadProductType {
   stock: number;
   price: number;
   status: number;
+}
+
+interface ProductImageType {
+  id: number;
+  url: string;
+  created_at: string;
+  updated_at: string;
 }
 
 type MetaLinksProductType = {
@@ -38,6 +46,11 @@ type MetaProductType = {
   links: MetaLinksProductType[];
 };
 
+interface ProductUploadImageType {
+  id?: number;
+  url: string;
+}
+
 interface HttpDataProductResponse {
   data: ProductType[];
   meta: MetaProductType;
@@ -54,6 +67,8 @@ type FrontProductDataType = {
 
 export type {
   ProductType,
+  ProductImageType,
+  ProductUploadImageType,
   MetaProductType,
   PayloadProductType,
   HttpDataProductResponse,

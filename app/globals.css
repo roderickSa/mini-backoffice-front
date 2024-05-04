@@ -15,3 +15,22 @@ input,
 button {
   @apply ring-gray-300;
 }
+
+/* carrousel of images */
+.c-slide{
+  @apply w-full h-full relative
+}
+.c-image{
+  @apply w-full h-full object-cover 
+}
+.c-arrow {
+  @apply md:text-xl sm:text-base text-xs 
+  font-bold absolute top-1/2 translate-y-[-50%] 
+  scale-[2] rounded-full bg-green-900 
+}
+.c-prev{
+  @apply left-5 sm:px-2 px-1.5 py-0.5 
+}
+.c-next{
+  @apply right-5 sm:px-2 px-1.5 py-0.5 
+}
